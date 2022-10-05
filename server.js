@@ -70,7 +70,7 @@ async function postBook(req, res, next) {
 
 
 // DELETE endpoints, will trigger a DELETE action on our DB
-// app.delete.apply('/book/:id', deleteBook)
+app.delete.apply('/book/:id', deleteBook)
 
 async function deleteBook(req, res, next) {
   const id = req.params.id;
