@@ -26,6 +26,8 @@ db.once('open', function() {
 });
 
 const Book = require('./models/book.js');
+// const postBook = require('./models/book.js');
+// const deleteBook = require('./models/book.js');
 
 // declare port
 const PORT = process.env.PORT || 3003
@@ -69,8 +71,8 @@ async function postBook(req, res, next) {
 }
 
 
-// DELETE endpoints, will trigger a DELETE action on our DB
-app.delete.apply('/book/:id', deleteBook)
+// DELETE endpoint, will trigger a DELETE action on DB
+app.delete('/book/:id', deleteBook);
 
 async function deleteBook(req, res, next) {
   const id = req.params.id;
@@ -83,6 +85,31 @@ async function deleteBook(req, res, next) {
   }
 }
 
+//  PUT endpoint, will trigger a PUT action on DB
+app.put('/book/:id', putBook);
+
+async function putBook(req, res, next) {
+  const id = req.params.id;
+  console.log(id);
+  try {
+      const data = req.body;
+
+      // .findByIdAndUpdate method takes 3 arguements
+      // 1. id of the thing (document) to update
+      // 2. update data object
+      // 3. mongoose options object {  new: true, overwrite: true}
+      const options = {
+        new: true,
+        overwrite: true,
+      };
+
+      // represents the updated document
+      const updatedBook = await Book.findByIdAndUpdate(id, data, options);
+      res.status(201).send(updatedBook);
+  } catch (error) {
+      next(error);
+  }
+}
 
 app.get('/*', (req, res) => {
   res.status(404).send('Not available');
